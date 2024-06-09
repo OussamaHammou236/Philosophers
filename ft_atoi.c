@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:39:59 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/08 20:43:31 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/06/09 20:13:10 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void ft_error(char *str)
 {
-    write(1,str,strlen(str));
+    write(1,str,ft_strlen(str));
     exit(1);
 }
 
