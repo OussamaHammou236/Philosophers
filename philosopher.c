@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/10 20:21:48 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/06/22 16:02:42 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 void *handler(void *arg)
 {
     printf("aaa\n");
+    
+    return NULL;
 }
 
 void join_thread(t_data data,t_philo *philo)
@@ -35,14 +37,17 @@ void initialization(t_data data,t_philo *philo)
     int i;
     int nb;
 
-    nb = 1;
     i = 0;
     while(data.nb_of_philo)
     {
+
         pthread_create(&philo[i].thread,NULL,handler,NULL);
-        pthread_mutex_init(&philo[i].mutex, NULL);
-        philo[i].id_of_philo = nb;
-        nb++;
+        pthread_mutex_init(philo[i].leftfork, NULL);
+        if(data.nb_of_philo == 1)
+            philo[i].right_fork = philo[0].leftfork;
+        else
+            philo[i].right_fork = philo[i + 1].leftfork;
+        philo[i].id_of_philo = i + 1;
         i++;
         data.nb_of_philo--;
     }

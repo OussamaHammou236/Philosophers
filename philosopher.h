@@ -23,6 +23,16 @@ int	ft_atoi(const char *str);
 void ft_error(char *str);
 size_t	ft_strlen(const char *str);
 
+
+typedef struct s_philo
+{
+   pthread_t thread;
+   pthread_mutex_t *leftfork;
+   pthread_mutex_t *right_fork;
+   int id_of_philo;
+    
+} t_philo;
+
 typedef struct s_data
 {
     int nb_of_philo;
@@ -30,14 +40,7 @@ typedef struct s_data
     int time_to_eat;
     int time_to_sleep;
     int nb;
+    t_philo *philos;
 } t_data;
-
-typedef struct s_philo
-{
-   pthread_t thread;
-   pthread_mutex_t mutex;
-   int id_of_philo;
-    
-} t_philo;
 
 #endif

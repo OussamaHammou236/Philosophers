@@ -1,0 +1,6 @@
+philo {id ,leftfork, right_fork, mutexs.. {akhir_mra_kla_fiha, state}}
+
+arry dyal l philos ->[1, 2, 3, 4, 5]
+                     [0, 1, 2, 3, 4]
+                     
+arry dyal l forks    [0, 1, 2, 3, 4]
