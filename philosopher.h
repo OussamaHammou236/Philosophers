@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 18:56:09 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/25 19:06:20 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/06/26 10:23:50 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <stdlib.h> 
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/time.h>
 
 int	ft_atoi(const char *str);
 void ft_error(char *str);
@@ -29,6 +30,8 @@ typedef struct s_data
     int time_to_die;
     int time_to_eat;
     int time_to_sleep;
+    struct timeval first_time;
+    int time;
     int nb;
     int i;
 } t_data;

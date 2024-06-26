@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/25 21:51:29 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/06/26 10:41:57 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,13 @@
 void eat(t_philo *philo)
 {
     pthread_mutex_lock(philo->leftfork);
-    printf("philo nb %d  has taken a leftfork \n",philo->id_of_philo);
+    gettimeofday(&philo->ph_data->first_time,0);
+    printf("%ld philo nb %d  has taken a leftfork \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time,philo->id_of_philo);
     pthread_mutex_lock(philo->right_fork);
-    printf("philo nb %d  has taken a right_fork \n",philo->id_of_philo);
-    printf("philo nb %d  is eating \n",philo->id_of_philo);
+    gettimeofday(&philo->ph_data->first_time,0);
+    printf("%ld philo nb %d  has taken a right_fork \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time, philo->id_of_philo);
+    gettimeofday(&philo->ph_data->first_time,0);
+    printf("%ld philo nb %d  is eating \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time, philo->id_of_philo);
     usleep(philo->ph_data->time_to_eat);
     pthread_mutex_unlock(philo->leftfork);
     pthread_mutex_unlock(philo->right_fork); 
@@ -26,7 +29,8 @@ void eat(t_philo *philo)
 
 void sleeping(t_philo *philo)
 {
-    printf("philo nb %d  is sleeping \n",philo->id_of_philo);
+    gettimeofday(&philo->ph_data->first_time,0);
+    printf("%ld philo nb %d  is sleeping \n", philo->ph_data->first_time.tv_usec - philo->ph_data->time,philo->id_of_philo);
     usleep(philo->ph_data->time_to_sleep);
 }
 
@@ -88,6 +92,8 @@ void thread_creat(t_data *data,t_philo *philo)
     int i;
 
     i   =   0;
+    gettimeofday(&philo->ph_data->first_time,0);
+    philo->ph_data->time = philo->ph_data->first_time.tv_usec;
     while(i < data->nb_of_philo)
     {
         pthread_create(&philo[i].thread,NULL,handler,&philo[i]);
