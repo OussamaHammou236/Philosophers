@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/26 10:41:57 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/06/27 21:30:36 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,41 +15,49 @@
 void eat(t_philo *philo)
 {
     pthread_mutex_lock(philo->leftfork);
-    gettimeofday(&philo->ph_data->first_time,0);
-    printf("%ld philo nb %d  has taken a leftfork \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time,philo->id_of_philo);
-    pthread_mutex_lock(philo->right_fork);
-    gettimeofday(&philo->ph_data->first_time,0);
-    printf("%ld philo nb %d  has taken a right_fork \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time, philo->id_of_philo);
-    gettimeofday(&philo->ph_data->first_time,0);
-    printf("%ld philo nb %d  is eating \n",philo->ph_data->first_time.tv_usec - philo->ph_data->time, philo->id_of_philo);
-    usleep(philo->ph_data->time_to_eat);
+    printf("%ld philo nb %d  has taken a leftfork \n",get_time() - philo->ph_data->time,philo->id_of_philo);
+
+    pthread_mutex_lock(philo->right_fork);   
+    printf("%ld philo nb %d  has taken a right_fork \n",get_time()- philo->ph_data->time, philo->id_of_philo);
+
+    philo->old_time = get_time();
+    printf("%ld philo nb %d  is eating \n",philo->old_time - philo->ph_data->time , philo->id_of_philo);
+    //pthread_mutex_lock(&philo->ph_data->mtx_eat);
+    philo->eat--;
+    //pthread_mutex_unlock(&philo->ph_data->mtx_eat);
+    ft_usleep(philo->ph_data->time_to_eat);
+
     pthread_mutex_unlock(philo->leftfork);
     pthread_mutex_unlock(philo->right_fork); 
 }
 
 void sleeping(t_philo *philo)
 {
-    gettimeofday(&philo->ph_data->first_time,0);
-    printf("%ld philo nb %d  is sleeping \n", philo->ph_data->first_time.tv_usec - philo->ph_data->time,philo->id_of_philo);
-    usleep(philo->ph_data->time_to_sleep);
+    printf("%ld philo nb %d  is sleeping \n", get_time() - philo->ph_data->time ,philo->id_of_philo);
+    ft_usleep(philo->ph_data->time_to_sleep);
 }
 
 void thinking(t_philo *philo)
 {
-    printf("philo nb %d  is thinking \n",philo->id_of_philo);
-     
+    printf("%ld philo nb %d  is thinking \n", get_time() - philo->ph_data->time,philo->id_of_philo);
 }
 
 void *handler(void *arg)
 {
     t_philo *philo;
-    
     philo = (t_philo *)arg;
-    int i = 0;
+    philo->eat = philo->ph_data->eat;
+    philo->old_time = 0;
     if(philo->id_of_philo % 2)
-        usleep(philo->ph_data->time_to_eat - 10);
-    eat(philo);
-    sleeping(philo);
+        ft_usleep(philo->ph_data->time_to_eat - 10);
+    while(1)
+    {
+        if(philo->eat == 0)
+            break ;
+        eat(philo);
+        sleeping(philo);
+        thinking(philo);
+    }
     return NULL;
 }
 
@@ -92,8 +100,7 @@ void thread_creat(t_data *data,t_philo *philo)
     int i;
 
     i   =   0;
-    gettimeofday(&philo->ph_data->first_time,0);
-    philo->ph_data->time = philo->ph_data->first_time.tv_usec;
+    data->time = get_time();
     while(i < data->nb_of_philo)
     {
         pthread_create(&philo[i].thread,NULL,handler,&philo[i]);
@@ -107,12 +114,14 @@ int main(int ac,char **av)
         return 0;
     t_data data;
     t_philo *philo;
+    data.time = get_time();
     data.nb_of_philo = ft_atoi(av[1]);
+    // convert milliseconds to microseconds
     data.time_to_die = ft_atoi(av[2]);
     data.time_to_eat = ft_atoi(av[3]);
     data.time_to_sleep = ft_atoi(av[4]);
     if(ac == 6)
-        data.nb = ft_atoi(av[5]);
+        data.eat = ft_atoi(av[5]);
     philo = malloc(data.nb_of_philo * sizeof(t_philo));
     initialization(&data,philo);
     thread_creat(&data,philo);
