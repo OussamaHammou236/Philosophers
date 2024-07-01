@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 18:56:09 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/06/27 21:20:45 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:03:38 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,16 @@ typedef struct s_data
     int time_to_eat;
     int time_to_sleep;
     int eat;
+    int flag;
     struct timeval first_time;
-    pthread_mutex_t mtx_to_sleep;
+    pthread_mutex_t mtx_to_time;
     pthread_mutex_t mtx_eat;
+    pthread_mutex_t mtx_to_print;
+    pthread_mutex_t mtx_flag;
+    pthread_t tr;
     long int time;
     long int nb;
+    int flag1;
     int i;
 } t_data;
 

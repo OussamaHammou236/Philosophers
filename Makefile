@@ -1,7 +1,7 @@
 NAME= philosopher
 CC=cc
 #CFLAGS= -Wall -Wextra -Werror
-CFLAGS= -fsanitize=address
+CFLAGS= -fsanitize=thread 
 OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c
 OBJ_O=${OBJ:.c=.o}
 
@@ -13,3 +13,8 @@ clean:
 
 fclean: clean
 	rm -rf $(NAME)
+
+push: fclean
+	@git add .
+	@git commit -m "beta_v"
+	@git push
