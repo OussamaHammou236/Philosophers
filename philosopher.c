@@ -29,14 +29,15 @@ void eat(t_philo *philo)
 
     pthread_mutex_lock(philo->right_fork);   
     printf("%ld philo nb %d  has taken a right_fork \n",time_of_ph(philo), philo->id_of_philo);
-    pthread_mutex_lock(&philo->ph_data->mtx_to_time);
-        philo->old_time = get_time();
-    pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
     printf("%ld philo nb %d  is eating \n",time_of_ph(philo) , philo->id_of_philo);
     pthread_mutex_lock(&philo->ph_data->mtx_eat);
         philo->eat--;
     pthread_mutex_unlock(&philo->ph_data->mtx_eat);
+    philo->status = 1;
     ft_usleep(philo->ph_data->time_to_eat);
+    pthread_mutex_lock(&philo->ph_data->mtx_to_time);
+        philo->old_time = get_time();
+    pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
 
     pthread_mutex_unlock(philo->leftfork);
     pthread_mutex_unlock(philo->right_fork); 
@@ -59,12 +60,17 @@ void *handler(void *arg)
     philo = (t_philo *)arg;
     philo->eat = philo->ph_data->eat;
     philo->old_time = get_time();
+    philo->status = 0;
+    philo->fg = 0;
     if(philo->id_of_philo % 2)
         ft_usleep(philo->ph_data->time_to_eat - 10);
     while(1)
     {
-        if(philo->ph_data->flag == 1)
+        if (philo->ph_data->flag == 1)
             return (NULL);
+        if (philo->fg == 1)
+            return (philo->ph_data->flag1++,NULL);
+        //printf("%d\n",philo->eat);
         eat(philo);
         sleeping(philo);
         thinking(philo);
@@ -121,10 +127,13 @@ void *tr(void *arg)
     ft_usleep(philo->ph_data->time_to_die - 10);
     while(1)
     {
-       if (i == philo->ph_data->nb_of_philo - 1)
+        if (i == philo->ph_data->nb_of_philo)
             i = 0;
+        if(philo->ph_data->flag1 >= philo->ph_data->nb_of_philo)
+            return NULL ;
         pthread_mutex_lock(&philo->ph_data->mtx_to_time);
-        if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die)
+        
+        if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo->status != 1)
         {
             printf("%ld philo nb %d is died\n",time_of_ph(&philo[i]), philo[i].id_of_philo);
             philo->ph_data->flag = 1;
@@ -133,12 +142,8 @@ void *tr(void *arg)
         }
         pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
         pthread_mutex_lock(&philo->ph_data->mtx_eat);
-        if (philo[i].eat < 0 && philo->ph_data->flag1)
-        {
-            philo->ph_data->flag = 1;
-            pthread_mutex_unlock(&philo->ph_data->mtx_eat);
-            return NULL;
-        }
+        if (philo[i].eat < 0)
+            philo[i].fg = 1;
         pthread_mutex_unlock(&philo->ph_data->mtx_eat);
         i++;
     }
@@ -152,6 +157,7 @@ void thread_creat(t_data *data,t_philo *philo)
     i   =   0;
     data->time = get_time();
     data->flag = 0;
+    data->flag1 = 0;
     while(i < data->nb_of_philo)
     {
         pthread_create(&philo[i].thread,NULL,handler,&philo[i]);

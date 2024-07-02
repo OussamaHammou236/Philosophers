@@ -56,6 +56,8 @@ typedef struct s_philo
     long int time_of_philo;
     long int old_time;
     int eat;
+    int fg;
+    int status;
 } t_philo;
 
 

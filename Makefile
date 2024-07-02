@@ -1,7 +1,7 @@
 NAME= philosopher
 CC=cc
 #CFLAGS= -Wall -Wextra -Werror
-CFLAGS= -fsanitize=thread 
+#CFLAGS= -fsanitize=thread 
 OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c
 OBJ_O=${OBJ:.c=.o}
 
