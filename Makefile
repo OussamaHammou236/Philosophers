@@ -2,7 +2,7 @@ NAME= philosopher
 CC=cc
 #CFLAGS= -Wall -Wextra -Werror
 #CFLAGS= -fsanitize=thread 
-OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c
+OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c initialization.c routine.c 
 OBJ_O=${OBJ:.c=.o}
 
 all: $(OBJ_O)
