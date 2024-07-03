@@ -16,5 +16,6 @@ fclean: clean
 
 push: fclean
 	@git add .
-	@git commit -m "beta_v"
-	@git push
+	@git commit -m "beta_v" > /nfs/homes/ohammou-/.local/share/Trash/files/out
+	@git push > /nfs/homes/ohammou-/.local/share/Trash/files/out
+	
