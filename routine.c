@@ -15,33 +15,39 @@
 void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->leftfork);
-	printf("%ld philo nb %d  has taken a leftfork \n",time_of_ph(philo),philo->id_of_philo);
+	ft_printf(time_of_ph(philo), philo,1);
 
 	pthread_mutex_lock(philo->right_fork);   
-	printf("%ld philo nb %d  has taken a right_fork \n",time_of_ph(philo), philo->id_of_philo);
-	printf("%ld philo nb %d  is eating \n",time_of_ph(philo) , philo->id_of_philo);
+	ft_printf(time_of_ph(philo), philo,2);
+	ft_printf(time_of_ph(philo), philo,3);
 	pthread_mutex_lock(&philo->ph_data->mtx_eat);
 		philo->eat--;
 	pthread_mutex_unlock(&philo->ph_data->mtx_eat);
+	pthread_mutex_lock(&philo->ph_data->status);
 	philo->status = 1;
+	pthread_mutex_unlock(&philo->ph_data->status);
 	pthread_mutex_lock(&philo->ph_data->mtx_to_time);
 		philo->old_time = get_time();
 	pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
 	ft_usleep(philo->ph_data->time_to_eat,philo);
 	pthread_mutex_unlock(philo->leftfork);
 	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_lock(&philo->ph_data->status);
 	philo->status = 0;
+	pthread_mutex_unlock(&philo->ph_data->status);
 }
 
 void	sleeping(t_philo *philo)
 {
 	if (philo->ph_data->flag != 1)
-		printf("%ld philo nb %d  is sleeping \n", time_of_ph(philo),philo->id_of_philo);
-	ft_usleep(philo->ph_data->time_to_sleep,philo);
+	{
+		ft_printf(time_of_ph(philo), philo,4);
+		ft_usleep(philo->ph_data->time_to_sleep,philo);
+	}
 }
 
 void	thinking(t_philo *philo)
 {
 	if (philo->ph_data->flag != 1)
-		printf("%ld philo nb %d  is thinking \n", time_of_ph(philo),philo->id_of_philo);
+		ft_printf(time_of_ph(philo), philo,5);
 }

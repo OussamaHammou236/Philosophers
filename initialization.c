@@ -49,6 +49,7 @@ void initialization(t_data *data,t_philo *philo)
 	pthread_mutex_init(&philo[0].ph_data->mtx_to_print, NULL);
 	pthread_mutex_init(&philo[0].ph_data->mtx_eat, NULL);
     pthread_mutex_init(&philo[0].ph_data->mtx_flag, NULL);
+    pthread_mutex_init(&philo[0].ph_data->status, NULL);
 }
 
 void thread_creat(t_data *data,t_philo *philo)

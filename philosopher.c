@@ -12,6 +12,24 @@
 
 #include "philosopher.h"
 
+void ft_printf(long time,t_philo *philo,int flag)
+{
+    pthread_mutex_lock(&philo->ph_data->mtx_to_print);
+    if(flag == 0)
+        printf("%ld philo nb %d is died\n",time, philo->id_of_philo);
+    else if (flag == 1)
+        printf("%ld philo nb %d has taken a leftfork\n",time,philo->id_of_philo);
+    else if (flag == 2)
+        printf("%ld philo nb %d has taken a rightfork\n",time,philo->id_of_philo);
+    else if (flag == 3)
+        printf("%ld philo nb %d is eating \n",time,philo->id_of_philo);
+    else if (flag == 4)
+        printf("%ld philo nb %d is sleeping\n",time,philo->id_of_philo);
+    else if (flag == 5)
+        printf("%ld philo nb %d is thinking\n",time,philo->id_of_philo);
+    pthread_mutex_unlock(&philo->ph_data->mtx_to_print);
+}
+
 void *handler(void *arg)
 {
     t_philo *philo;
@@ -24,12 +42,16 @@ void *handler(void *arg)
         ft_usleep(philo->ph_data->time_to_eat - 10,philo);
     while(1)
     {
+        pthread_mutex_lock(&philo->ph_data->status);
         if(philo->status == 5)
-            printf("%ld philo nb %d is died\n",time_of_ph(philo), philo->id_of_philo);
+            ft_printf(time_of_ph(philo), philo,0);
         if (philo->ph_data->flag == 1)
-            return (NULL);
+            return (pthread_mutex_unlock(&philo->ph_data->status),NULL);
+        pthread_mutex_unlock(&philo->ph_data->status);
+        pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if (philo->fg == 1)
-            return (philo->ph_data->flag1++,NULL);
+            return (pthread_mutex_unlock(&philo->ph_data->mtx_eat),philo->ph_data->flag1++,NULL);
+        pthread_mutex_unlock(&philo->ph_data->mtx_eat);
         eat(philo);
         sleeping(philo);
         thinking(philo);
@@ -54,9 +76,10 @@ void *tr(void *arg)
         pthread_mutex_lock(&philo->ph_data->mtx_to_time);  
         if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo->status != 1)
         {
-            // printf("%ld philo nb %d is died\n",time_of_ph(&philo[i]), philo[i].id_of_philo);
+            pthread_mutex_lock(&philo->ph_data->status);
             philo[i].status = 5;
             philo->ph_data->flag = 1;
+            pthread_mutex_unlock(&philo->ph_data->status);
             pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
             return NULL;
         }

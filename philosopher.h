@@ -34,6 +34,7 @@ typedef struct s_data
 	pthread_mutex_t mtx_eat;
 	pthread_mutex_t mtx_to_print;
 	pthread_mutex_t mtx_flag;
+	pthread_mutex_t	status;
 	pthread_t tr;
 	long int time;
 	long int nb;
@@ -70,5 +71,6 @@ void	eat(t_philo *philo);
 void	sleeping(t_philo *philo);
 void	thinking(t_philo *philo);
 long	time_of_ph(t_philo *philo);
+void	ft_printf(long time,t_philo *philo,int flag);
 
 #endif
