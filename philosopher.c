@@ -38,20 +38,29 @@ void *handler(void *arg)
     philo->old_time = get_time();
     philo->status = 0;
     philo->fg = 0;
+    if(philo->ph_data->nb_of_philo == 1)
+        ft_usleep(philo->ph_data->time_to_die,philo);
     if(philo->id_of_philo % 2)
         ft_usleep(philo->ph_data->time_to_eat - 10,philo);
     while(1)
     {
         pthread_mutex_lock(&philo->ph_data->status);
         if(philo->status == 5)
+        {
             ft_printf(time_of_ph(philo), philo,0);
+        }
         if (philo->ph_data->flag == 1)
-            return (pthread_mutex_unlock(&philo->ph_data->status),NULL);
+        {
+            pthread_mutex_unlock(&philo->ph_data->status); 
+            return (NULL);
+        }
         pthread_mutex_unlock(&philo->ph_data->status);
+
         pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if (philo->fg == 1)
-            return (pthread_mutex_unlock(&philo->ph_data->mtx_eat),philo->ph_data->flag1++,NULL);
+            return (philo->ph_data->flag1++,pthread_mutex_unlock(&philo->ph_data->mtx_eat),NULL);
         pthread_mutex_unlock(&philo->ph_data->mtx_eat);
+ 
         eat(philo);
         sleeping(philo);
         thinking(philo);
@@ -71,20 +80,22 @@ void *tr(void *arg)
     {
         if (i == philo->ph_data->nb_of_philo)
             i = 0;
+        pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if(philo->ph_data->flag1 >= philo->ph_data->nb_of_philo)
-            return NULL ;
-        pthread_mutex_lock(&philo->ph_data->mtx_to_time);  
-        if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo->status != 1)
+            return (pthread_mutex_unlock(&philo->ph_data->mtx_eat), NULL);
+        pthread_mutex_unlock(&philo->ph_data->mtx_eat);
+
+        pthread_mutex_lock(&philo->ph_data->status);
+        if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo[i].status != 1)
         {
-            pthread_mutex_lock(&philo->ph_data->status);
-            philo[i].status = 5;
             philo->ph_data->flag = 1;
+            philo[i].status = 5;
             pthread_mutex_unlock(&philo->ph_data->status);
-            pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
             return NULL;
         }
-        pthread_mutex_unlock(&philo->ph_data->mtx_to_time);
-        pthread_mutex_lock(&philo->ph_data->mtx_eat); 
+        pthread_mutex_unlock(&philo->ph_data->status);
+
+        pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if (philo[i].eat < 0 && philo[i].ph_data->flag2)
             philo[i].fg = 1;
         pthread_mutex_unlock(&philo->ph_data->mtx_eat);

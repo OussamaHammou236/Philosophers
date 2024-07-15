@@ -1,6 +1,15 @@
-philo {id ,leftfork, right_fork, mutexs.. {akhir_mra_kla_fiha, state}}
+philo[i].old_time  -> read  write
 
-arry dyal l philos ->[1, 2, 3, 4, 5]
-                     [0, 1, 2, 3, 4]
-                     
-arry dyal l forks    [0, 1, 2, 3, 4]
+philo[i].status -> read  write
+
+philo->ph_data->flag ->  read  write
+
+
+
+philo->ph_data->flag1 -> read write
+
+
+
+philo[i].eat -> read  write
+
+philo[i].fg -> read  write

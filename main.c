@@ -12,17 +12,28 @@
 
 #include "philosopher.h"
 int c = 0;
-void *handler(void *ar)
+
+void    *handler(void *arg)
 {
-    t_data data;
-    //pthread_mutex_lock(ar);
-    //printf("1\n");
-    gettimeofday(&data.first_time,0);
-    usleep(1000);
-    printf("%ld\n",data.first_time.tv_usec);
-    //pthread_mutex_unlock(ar);
-    return NULL;
+    int i = 0;
+    t_data *data = arg;
+    while (i < 200)
+    {
+    	pthread_mutex_lock(&data->status);
+	    if (data->flag == 1)
+	    {
+		    pthread_mutex_unlock(&data->status);
+		    return NULL;
+	    }
+        printf("%d\n",i);
+        if(i == 100)
+            data->flag  = 1;
+        i++;
+	    pthread_mutex_unlock(&data->status);
+        usleep(500);
+    }
 }
+ 
 
 int main()
 {
@@ -34,15 +45,16 @@ int main()
     pthread_t thread1;
     pthread_mutex_t mutex;
     t_data data;
+    data.flag = 0;
     gettimeofday(&data.first_time,0);
-    printf("%ld'\n",data.first_time.tv_usec);
-    pthread_mutex_init(&mutex, NULL);
-    pthread_create(&thread, NULL, handler, &mutex);
-    pthread_create(&thread2, NULL, handler, &mutex);
-    pthread_create(&thread3, NULL, handler, &mutex);
-    pthread_create(&thread4, NULL, handler, &mutex);
-    pthread_create(&thread5, NULL, handler, &mutex);
-    pthread_create(&thread1, NULL, handler, &mutex);
+    //printf("%ld'\n",data.first_time.tv_usec);
+    pthread_mutex_init(&data.status, NULL);
+    pthread_create(&thread, NULL, handler, &data);
+    pthread_create(&thread2, NULL, handler, &data);
+    pthread_create(&thread3, NULL, handler, &data);
+    pthread_create(&thread4, NULL, handler, &data);
+    pthread_create(&thread5, NULL, handler, &data);
+    pthread_create(&thread1, NULL, handler, &data);
     pthread_join(thread, NULL);
     pthread_join(thread2, NULL); 
     pthread_join(thread3, NULL); 
