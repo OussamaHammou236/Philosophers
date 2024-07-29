@@ -12,10 +12,10 @@
 
 #include "philosopher.h"
 
-int ft_error(char *str)
+int	ft_error(char *str)
 {
-    write(1,str,ft_strlen(str));
-    return -1;
+	write(1, str, ft_strlen(str));
+	return (-1);
 }
 
 int	ft_atoi(const char *str)

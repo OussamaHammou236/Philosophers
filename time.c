@@ -12,43 +12,43 @@
 
 #include "philosopher.h"
 
-void    ft_usleep(long time,t_philo *philo)
+void	ft_usleep(long time, t_philo *philo)
 {
-    long    start;
+	long	start;
 
-    start = get_time();
-    while ((get_time() - start) < time)
-    {
-    	pthread_mutex_lock(&philo->ph_data->status);
-	    if (philo->ph_data->flag == 1)
-	    {
-		    pthread_mutex_unlock(&philo->ph_data->status);
-		    return ;
-	    }
-	    pthread_mutex_unlock(&philo->ph_data->status);
-        usleep(500);
-    }
+	start = get_time();
+	while ((get_time() - start) < time)
+	{
+		pthread_mutex_lock(&philo->ph_data->status);
+		if (philo->ph_data->flag == 1)
+		{
+			pthread_mutex_unlock(&philo->ph_data->status);
+			return ;
+		}
+		pthread_mutex_unlock(&philo->ph_data->status);
+		usleep(500);
+	}
 }
 
-long    get_time()
+long	get_time(void)
 {
-    struct  timeval tv;
-    int             ret;
+	struct timeval	tv;
+	int				ret;
 
-    ret = gettimeofday(&tv, NULL);
-    if (ret)
-        exit(1);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+	ret = gettimeofday(&tv, NULL);
+	if (ret)
+		exit(1);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-long time_of_ph(t_philo *philo)
+long	time_of_ph(t_philo *philo)
 {
-    long time;
+	long	time;
 
-    pthread_mutex_lock(&philo->ph_data->mtx_to_print);
-    time = get_time() - philo->ph_data->time;
-    pthread_mutex_unlock(&philo->ph_data->mtx_to_print);
-    return time;
+	pthread_mutex_lock(&philo->ph_data->mtx_to_print);
+	time = get_time() - philo->ph_data->time;
+	pthread_mutex_unlock(&philo->ph_data->mtx_to_print);
+	return (time);
 }
 
 // 1s -> 1000ms
