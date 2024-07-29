@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/29 20:16:27 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/29 22:18:09 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,5 +126,6 @@ int	main(int ac, char **av)
 	initialization(&data, philo);
 	thread_creat(&data, philo);
 	join_thread(data, philo);
+	free_memory(philo);
 	return (0);
 }

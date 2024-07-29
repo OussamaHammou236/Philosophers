@@ -1,8 +1,8 @@
 NAME= philosopher
 CC=cc
 #CFLAGS= -Wall -Wextra -Werror
-CFLAGS= -fsanitize=thread #-TSAN_OPTIONS=second_deadlock_stack=1 
-OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c initialization.c routine.c 
+#CFLAGS= -fsanitize=thread #-TSAN_OPTIONS=second_deadlock_stack=1 
+OBJ= ft_atoi.c ft_strlen.c philosopher.c time.c initialization.c routine.c free_memory.c
 OBJ_O=${OBJ:.c=.o}
 
 all: $(NAME)
@@ -16,10 +16,7 @@ clean:
 fclean: clean
 	rm -rf $(NAME)
 
-push: fclean
-	@git add .
-	@git commit -m "beta_v"
-	@git push
+re: fclean all
 
 .SECONDARY: $(OBJ_O)
 	
