@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:23:12 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/18 10:56:02 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/29 22:46:17 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ void	join_thread(t_data data, t_philo *philo)
 	int	i;
 
 	i = 0;
+	pthread_join(philo[0].ph_data->tr, NULL);
 	while (data.nb_of_philo)
 	{
 		pthread_join(philo[i].thread, NULL);
 		i++;
 		data.nb_of_philo--;
 	}
-	pthread_join(philo[0].ph_data->tr, NULL);
 }
 
 void	initialization(t_data *data, t_philo *philo)
