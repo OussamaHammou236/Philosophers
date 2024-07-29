@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/03 10:45:31 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/25 14:21:28 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,38 +34,43 @@ void *handler(void *arg)
 {
     t_philo *philo;
     philo = (t_philo *)arg;
-    philo->eat = philo->ph_data->eat;
-    philo->old_time = get_time();
-    philo->status = 0;
-    philo->fg = 0;
-    if(philo->ph_data->nb_of_philo == 1)
-        ft_usleep(philo->ph_data->time_to_die,philo);
-    if(philo->id_of_philo % 2)
-        ft_usleep(philo->ph_data->time_to_eat - 10,philo);
+    initialization_philo(philo);
     while(1)
     {
         pthread_mutex_lock(&philo->ph_data->status);
         if(philo->status == 5)
-        {
             ft_printf(time_of_ph(philo), philo,0);
-        }
-        if (philo->ph_data->flag == 1)
-        {
-            pthread_mutex_unlock(&philo->ph_data->status); 
-            return (NULL);
-        }
+        if (philo->ph_data->flag == 1) 
+            return (pthread_mutex_unlock(&philo->ph_data->status), NULL);
         pthread_mutex_unlock(&philo->ph_data->status);
-
         pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if (philo->fg == 1)
-            return (philo->ph_data->flag1++,pthread_mutex_unlock(&philo->ph_data->mtx_eat),NULL);
+        {
+            philo->ph_data->flag1++;
+            return (pthread_mutex_unlock(&philo->ph_data->mtx_eat),NULL);
+        }
         pthread_mutex_unlock(&philo->ph_data->mtx_eat);
- 
         eat(philo);
         sleeping(philo);
         thinking(philo);
+        if (philo->ph_data->nb_of_philo != 2)
+            usleep(500);
     }
     return NULL;
+}
+
+int etc_of_tr(t_philo *philo, int i)
+{
+    pthread_mutex_lock(&philo->ph_data->status);
+    if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo[i].status != 1)
+    {
+        philo->ph_data->flag = 1;
+        philo[i].status = 5;
+        pthread_mutex_unlock(&philo->ph_data->status);
+        return 1;
+    }
+    pthread_mutex_unlock(&philo->ph_data->status);
+    return 0;
 }
 
 void *tr(void *arg)
@@ -84,17 +89,8 @@ void *tr(void *arg)
         if(philo->ph_data->flag1 >= philo->ph_data->nb_of_philo)
             return (pthread_mutex_unlock(&philo->ph_data->mtx_eat), NULL);
         pthread_mutex_unlock(&philo->ph_data->mtx_eat);
-
-        pthread_mutex_lock(&philo->ph_data->status);
-        if (get_time() - philo[i].old_time > philo[i].ph_data->time_to_die && philo[i].status != 1)
-        {
-            philo->ph_data->flag = 1;
-            philo[i].status = 5;
-            pthread_mutex_unlock(&philo->ph_data->status);
+        if (etc_of_tr(philo, i) == 1)
             return NULL;
-        }
-        pthread_mutex_unlock(&philo->ph_data->status);
-
         pthread_mutex_lock(&philo->ph_data->mtx_eat);
         if (philo[i].eat < 0 && philo[i].ph_data->flag2)
             philo[i].fg = 1;
@@ -111,7 +107,6 @@ int main(int ac,char **av)
     t_data data;
     t_philo *philo;
     data.nb_of_philo = ft_atoi(av[1]);
-    // convert milliseconds to microseconds
     data.time_to_die = ft_atoi(av[2]);
     data.time_to_eat = ft_atoi(av[3]);
     data.time_to_sleep = ft_atoi(av[4]);
@@ -121,9 +116,12 @@ int main(int ac,char **av)
         data.eat = ft_atoi(av[5]);
         data.flag2 = 1;
     }
+    if (data.time_to_die < 0 || data.time_to_eat < 0
+        || data.time_to_sleep < 0 || data.nb_of_philo < 0)
+        return -1;
     philo = malloc(data.nb_of_philo * sizeof(t_philo));
     initialization(&data,philo);
     thread_creat(&data,philo);
     join_thread(data,philo);
-    
+    return 0;  
 }

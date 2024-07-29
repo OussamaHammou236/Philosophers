@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 18:56:09 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/03 10:41:44 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/18 11:19:57 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ typedef struct s_philo
 } t_philo;
 
 int		ft_atoi(const char *str);
-void	ft_error(char *str);
+int		ft_error(char *str);
 size_t	ft_strlen(const char *str);
 long	get_time();
 void    ft_usleep(long time,t_philo *philo);
@@ -72,5 +72,6 @@ void	sleeping(t_philo *philo);
 void	thinking(t_philo *philo);
 long	time_of_ph(t_philo *philo);
 void	ft_printf(long time,t_philo *philo,int flag);
+void	initialization_philo(t_philo *philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:23:12 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/03 10:25:44 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/07/18 10:56:02 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,14 @@ void thread_creat(t_data *data,t_philo *philo)
         i++;
     }
     pthread_create(&data->tr,NULL,tr,philo);
+}
+
+void initialization_philo(t_philo *philo)
+{
+    philo->eat = philo->ph_data->eat;
+    philo->old_time = get_time();
+    philo->status = 0;
+    philo->fg = 0;
+    if(philo->ph_data->nb_of_philo == 1)
+        ft_usleep(philo->ph_data->time_to_die,philo);   
 }
