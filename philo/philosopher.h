@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 18:56:09 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/29 21:28:15 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/08/08 18:26:20 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,7 @@ long				time_of_ph(t_philo *philo);
 void				ft_printf(long time, t_philo *philo, int flag);
 void				initialization_philo(t_philo *philo);
 void				free_memory(t_philo *philo);
+void				ft_printf1(long time, t_philo *philo, int flag);
+void				routine(t_philo	*philo);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/08 20:43:43 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/29 22:44:52 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:20:41 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,13 @@ void	ft_printf(long time, t_philo *philo, int flag)
 {
 	pthread_mutex_lock(&philo->ph_data->mtx_to_print);
 	if (flag == 0)
-		printf("%ld philo nb %d is died\n", time, philo->id_of_philo);
-	else if (flag == 1)
-		printf("%ld philo nb %d has taken a leftfork\n", time,
-			philo->id_of_philo);
-	else if (flag == 2)
-		printf("%ld philo nb %d has taken a rightfork\n", time,
-			philo->id_of_philo);
+		printf("%ld %d died\n", time, philo->id_of_philo);
 	else if (flag == 3)
-		printf("%ld philo nb %d is eating \n", time, philo->id_of_philo);
+		printf("%ld %d is eating \n", time, philo->id_of_philo);
 	else if (flag == 4)
-		printf("%ld philo nb %d is sleeping\n", time, philo->id_of_philo);
+		printf("%ld %d is sleeping\n", time, philo->id_of_philo);
 	else if (flag == 5)
-		printf("%ld philo nb %d is thinking\n", time, philo->id_of_philo);
+		printf("%ld %d is thinking\n", time, philo->id_of_philo);
 	pthread_mutex_unlock(&philo->ph_data->mtx_to_print);
 }
 
@@ -53,9 +47,7 @@ void	*handler(void *arg)
 			return (pthread_mutex_unlock(&philo->ph_data->mtx_eat), NULL);
 		}
 		pthread_mutex_unlock(&philo->ph_data->mtx_eat);
-		eat(philo);
-		sleeping(philo);
-		thinking(philo);
+		routine(philo);
 	}
 	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: ohammou- <ohammou-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 10:23:12 by ohammou-          #+#    #+#             */
-/*   Updated: 2024/07/29 22:46:17 by ohammou-         ###   ########.fr       */
+/*   Updated: 2024/08/09 19:20:17 by ohammou-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,23 @@ void	initialization_philo(t_philo *philo)
 	philo->fg = 0;
 	if (philo->ph_data->nb_of_philo == 1)
 		ft_usleep(philo->ph_data->time_to_die, philo);
+}
+
+void	ft_printf1(long time, t_philo *philo, int flag)
+{
+	pthread_mutex_lock(&philo->ph_data->status);
+	if (philo->ph_data->flag == 1)
+	{
+		pthread_mutex_unlock(&philo->ph_data->status);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->ph_data->status);
+	pthread_mutex_lock(&philo->ph_data->mtx_to_print);
+	if (flag == 1)
+		printf("%ld %d has taken a fork\n", time,
+			philo->id_of_philo);
+	if (flag == 2)
+		printf("%ld %d has taken a fork\n", time,
+			philo->id_of_philo);
+	pthread_mutex_unlock(&philo->ph_data->mtx_to_print);
 }
