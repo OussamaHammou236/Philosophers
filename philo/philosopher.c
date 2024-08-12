@@ -32,7 +32,9 @@ void	*handler(void *arg)
 
 	philo = (t_philo *)arg;
 	initialization_philo(philo);
-	while (1)
+	if (philo->id_of_philo % 2 == 0 && philo->ph_data->nb_of_philo % 2 == 0)
+		ft_usleep(philo->ph_data->time_to_eat - 10, philo);
+	while (1 && philo->ph_data->nb_of_philo > 1)
 	{
 		pthread_mutex_lock(&philo->ph_data->status);
 		if (philo->status == 5)
@@ -112,8 +114,8 @@ int	main(int ac, char **av)
 		data.flag2 = 1;
 	}
 	if (data.time_to_die < 0 || data.time_to_eat < 0 || data.time_to_sleep < 0
-		|| data.nb_of_philo < 0)
-		return (-1);
+		|| data.nb_of_philo <= 0 || (data.flag2 && data.eat <= 0))
+		return (ft_error("error\n"));
 	philo = malloc(data.nb_of_philo * sizeof(t_philo));
 	initialization(&data, philo);
 	thread_creat(&data, philo);

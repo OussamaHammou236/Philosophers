@@ -17,6 +17,7 @@ void	ft_usleep(long time, t_philo *philo)
 	long	start;
 
 	start = get_time();
+	(void)philo;
 	while ((get_time() - start) < time)
 	{
 		pthread_mutex_lock(&philo->ph_data->status);

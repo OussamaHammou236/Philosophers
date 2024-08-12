@@ -72,11 +72,14 @@ void	thread_creat(t_data *data, t_philo *philo)
 void	initialization_philo(t_philo *philo)
 {
 	philo->eat = philo->ph_data->eat;
-	philo->old_time = get_time();
 	philo->status = 0;
 	philo->fg = 0;
+	philo->old_time = get_time();
 	if (philo->ph_data->nb_of_philo == 1)
-		ft_usleep(philo->ph_data->time_to_die, philo);
+	{
+		ft_usleep(philo->ph_data->time_to_die + 1, philo);
+		ft_printf(time_of_ph(philo), philo, 0);
+	}
 }
 
 void	ft_printf1(long time, t_philo *philo, int flag)
